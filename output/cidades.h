@@ -12,7 +12,7 @@ typedef struct {
     Cidade *C; // Vetor de cidades
 } Estrada;
 
-Estrada *getEstrada(const char *nomeArquivo); // Inicializa cidades no TAD indicado acima.
+Estrada *getEstrada(const char *teste01); // Inicializa cidades no TAD indicado acima.
 double calcularMenorVizinhanca(const char *teste01); // Retorna a menor vizinhança.
 char *cidadeMenorVizinhanca(const char *teste01); // Retorna a cidade que tem menor vizinhança.
 
