@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "cidades.h"
+#include "cidade.h"
 
-// Função para inicializar a estrutura Estrada com os dados do arquivo
-Estrada *getEstrada(const char *teste01) {
-    FILE *arquivo = fopen(teste01, "r");
+const char *arquivo = "teste01.txt"
+Estrada *getEstrada(const char *arquivo) {
+    FILE *arquivo = fopen(arquivo, "r");
     if (arquivo == NULL) {
-        printf("Este arquivo nao pode ser aberto!!"\n);
         return NULL;
     }
 
@@ -20,7 +19,7 @@ Estrada *getEstrada(const char *teste01) {
     fscanf(arquivo, "%d", &estrada->T);
     fscanf(arquivo, "%d", &estrada->N);
 
-    if (estrada->T < 3 || estrada->T > 106 || estrada->N < 2 || estrada->N > 104) {
+    if (estrada->T < 3 || estrada->T > 1000000 || estrada->N < 2 || estrada->N > 10000) {
         fclose(arquivo);
         free(estrada);
         return NULL;
@@ -42,9 +41,9 @@ Estrada *getEstrada(const char *teste01) {
     return estrada;
 }
 
-// Função para calcular a menor vizinhança
-double calcularMenorVizinhanca(const char *teste01) {
-    Estrada *estrada = getEstrada(teste01);
+
+double calcularMenorVizinhanca(const char *arquivo) {
+    Estrada *estrada = getEstrada(arquivo);
     if (estrada == NULL) {
         return -1.0;
     }
@@ -52,16 +51,26 @@ double calcularMenorVizinhanca(const char *teste01) {
     double menorVizinhanca = estrada->T;
 
     for (int i = 0; i < estrada->N; i++) {
-        double vizinhanca;
+        double inicio, fim, vizinhanca;
+
         if (i == 0) {
-            vizinhanca = (estrada->C[i + 1].Posicao - estrada->C[i].Posicao) / 2.0;
+
+            inicio = 0;
+            fim = (estrada->C[i].Posicao + estrada->C[i + 1].Posicao) / 2.0;
+
         } else if (i == estrada->N - 1) {
-            vizinhanca = (estrada->C[i].Posicao - estrada->C[i - 1].Posicao) / 2.0;
+
+            inicio = (estrada->C[i].Posicao + estrada->C[i - 1].Posicao) / 2.0;
+            fim = estrada->T;
+
         } else {
-            double esquerda = (estrada->C[i].Posicao - estrada->C[i - 1].Posicao) / 2.0;
-            double direita = (estrada->C[i + 1].Posicao - estrada->C[i].Posicao) / 2.0;
-            vizinhanca = esquerda < direita ? esquerda : direita;
+
+            inicio = (estrada->C[i].Posicao + estrada->C[i - 1].Posicao) / 2.0;
+            fim = (estrada->C[i].Posicao + estrada->C[i + 1].Posicao) / 2.0;
+
         }
+
+        vizinhanca = fim - inicio;
 
         if (vizinhanca < menorVizinhanca) {
             menorVizinhanca = vizinhanca;
@@ -73,9 +82,9 @@ double calcularMenorVizinhanca(const char *teste01) {
     return menorVizinhanca;
 }
 
-// Função para retornar o nome da cidade com a menor vizinhança
-char *cidadeMenorVizinhanca(const char *teste01) {
-    Estrada *estrada = getEstrada(teste01);
+
+char *cidadeMenorVizinhanca(const char *arquivo) {
+    Estrada *estrada = getEstrada(arquivo);
     if (estrada == NULL) {
         return NULL;
     }
@@ -84,16 +93,25 @@ char *cidadeMenorVizinhanca(const char *teste01) {
     int cidadeMenor = 0;
 
     for (int i = 0; i < estrada->N; i++) {
-        double vizinhanca;
+        double inicio, fim, vizinhanca;
+
         if (i == 0) {
-            vizinhanca = (estrada->C[i + 1].Posicao - estrada->C[i].Posicao) / 2.0;
+
+            inicio = 0;
+            fim = (estrada->C[i].Posicao + estrada->C[i + 1].Posicao) / 2.0;
+
         } else if (i == estrada->N - 1) {
-            vizinhanca = (estrada->C[i].Posicao - estrada->C[i - 1].Posicao) / 2.0;
+
+            inicio = (estrada->C[i].Posicao + estrada->C[i - 1].Posicao) / 2.0;
+            fim = estrada->T;
+
         } else {
-            double esquerda = (estrada->C[i].Posicao - estrada->C[i - 1].Posicao) / 2.0;
-            double direita = (estrada->C[i + 1].Posicao - estrada->C[i].Posicao) / 2.0;
-            vizinhanca = esquerda < direita ? esquerda : direita;
+
+            inicio = (estrada->C[i].Posicao + estrada->C[i - 1].Posicao) / 2.0;
+            fim = (estrada->C[i].Posicao + estrada->C[i + 1].Posicao) / 2.0;
         }
+
+        vizinhanca = fim - inicio;
 
         if (vizinhanca < menorVizinhanca) {
             menorVizinhanca = vizinhanca;
